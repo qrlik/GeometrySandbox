@@ -23,4 +23,11 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+private:
+	void PrintStringTypes() const;
+
+	FString Name = "John Connor";
+	int WeaponsNum = 4;
+	float Health = 34.4343123423;
+	bool IsDead = false;
 };

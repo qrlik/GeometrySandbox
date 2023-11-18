@@ -2,6 +2,9 @@
 
 
 #include "BaseGeometryActor.h"
+#include "Engine.h"
+
+DEFINE_LOG_CATEGORY_STATIC(LogBaseActor, All, All)
 
 // Sets default values
 ABaseGeometryActor::ABaseGeometryActor()
@@ -15,7 +18,7 @@ ABaseGeometryActor::ABaseGeometryActor()
 void ABaseGeometryActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	PrintStringTypes();
 }
 
 // Called every frame
@@ -25,3 +28,15 @@ void ABaseGeometryActor::Tick(float DeltaTime)
 
 }
 
+void ABaseGeometryActor::PrintStringTypes() const
+{
+	UE_LOG(LogBaseActor, Display, TEXT("Name: %s"), *Name);
+	const FString WeaponsNumStr = "Weapons num = " + FString::FromInt(WeaponsNum);
+	const FString HealthStr = "Health num = " + FString::SanitizeFloat(Health);
+	const FString IsDeadStr = "isDead = " + FString((IsDead) ? "True" : "False");
+
+	const FString Stat = FString::Printf(TEXT(" \n == All Stats == \n %s \n %s \n %s"), *WeaponsNumStr, *HealthStr, *IsDeadStr);
+
+	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, Name);
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, Stat, true, FVector2D{ 1.5f, 1.5f });
+}
