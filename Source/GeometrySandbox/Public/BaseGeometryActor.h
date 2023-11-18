@@ -26,8 +26,21 @@ public:
 private:
 	void PrintStringTypes() const;
 
+	UPROPERTY(EditAnywhere)
 	FString Name = "John Connor";
-	int WeaponsNum = 4;
+
+	UPROPERTY(EditInstanceOnly, Category = "Weapon")
+	int32 WeaponsNum = 4;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Stat")
+	int32 KillsNum = 7;
+
+	UPROPERTY(EditAnywhere, Category = "Health")
 	float Health = 34.4343123423;
+
+	UPROPERTY(EditAnyWhere)
 	bool IsDead = false;
+
+	UPROPERTY(VisibleAnywhere)
+	bool HasWeapon = false;
 };
