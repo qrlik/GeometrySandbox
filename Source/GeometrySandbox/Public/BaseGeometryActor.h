@@ -7,6 +7,27 @@
 #include "Components/StaticMeshComponent.h"
 #include "BaseGeometryActor.generated.h"
 
+UENUM(BlueprintType)
+enum class EMovementType : uint8
+{
+	Sin = 0,
+	Static = 1
+};
+
+USTRUCT(BlueprintType)
+struct FGeometryData {
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditInstanceOnly, Category = "Movement")
+	float Amplitude = 50.f;
+
+	UPROPERTY(EditInstanceOnly, Category = "Movement")
+	float Frequency = 2.f;
+
+	UPROPERTY(EditInstanceOnly, Category = "Movement")
+	EMovementType MovementType = EMovementType::Static;
+};
+
 UCLASS()
 class GEOMETRYSANDBOX_API ABaseGeometryActor : public AActor
 {
@@ -26,17 +47,15 @@ public:
 
 private:
 	void PrintStringTypes() const;
+	void ProcessMovement();
 
 	FVector InitialLocation;
 
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* Mesh;
 
-	UPROPERTY(EditInstanceOnly, Category = "Movement")
-	float Amplitude = 50.f;
-
-	UPROPERTY(EditInstanceOnly, Category = "Movement")
-	float Frequency = 2.f;
+	UPROPERTY(EditInstanceOnly, Category = "Geometry")
+	FGeometryData GeometryData;
 
 	UPROPERTY(EditAnywhere)
 	FString Name = "John Connor";
@@ -55,4 +74,5 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	bool HasWeapon = false;
+
 };
