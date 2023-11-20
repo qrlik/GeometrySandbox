@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/StaticMeshComponent.h"
 #include "BaseGeometryActor.generated.h"
 
 UCLASS()
@@ -25,6 +26,17 @@ public:
 
 private:
 	void PrintStringTypes() const;
+
+	FVector InitialLocation;
+
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* Mesh;
+
+	UPROPERTY(EditInstanceOnly, Category = "Movement")
+	float Amplitude = 50.f;
+
+	UPROPERTY(EditInstanceOnly, Category = "Movement")
+	float Frequency = 2.f;
 
 	UPROPERTY(EditAnywhere)
 	FString Name = "John Connor";

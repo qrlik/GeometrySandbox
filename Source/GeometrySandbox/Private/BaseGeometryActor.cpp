@@ -7,18 +7,22 @@
 DEFINE_LOG_CATEGORY_STATIC(LogBaseActor, All, All)
 
 // Sets default values
-ABaseGeometryActor::ABaseGeometryActor()
+ABaseGeometryActor::ABaseGeometryActor(): 
+	Mesh(CreateDefaultSubobject<UStaticMeshComponent>("BaseMesh")) 
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	SetRootComponent(Mesh);
 }
 
 // Called when the game starts or when spawned
 void ABaseGeometryActor::BeginPlay()
 {
 	Super::BeginPlay();
-	PrintStringTypes();
+
+	//PrintStringTypes();
+
+	InitialLocation = GetActorLocation();
 }
 
 // Called every frame
@@ -26,6 +30,9 @@ void ABaseGeometryActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	auto CurrentLocation = GetActorLocation();
+	CurrentLocation.Z = InitialLocation.Z + Amplitude * FMath::Sin(Frequency * GetWorld()->GetTimeSeconds());
+	SetActorLocation(CurrentLocation);
 }
 
 void ABaseGeometryActor::PrintStringTypes() const
