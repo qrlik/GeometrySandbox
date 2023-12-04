@@ -26,6 +26,9 @@ struct FGeometryData {
 
 	UPROPERTY(EditInstanceOnly, Category = "Movement")
 	EMovementType MovementType = EMovementType::Static;
+
+	UPROPERTY(EditInstanceOnly, Category = "Design")
+	FLinearColor Color = FLinearColor::Black;
 };
 
 UCLASS()
@@ -48,6 +51,7 @@ public:
 private:
 	void PrintStringTypes() const;
 	void ProcessMovement();
+	void SetColor();
 
 	FVector InitialLocation;
 

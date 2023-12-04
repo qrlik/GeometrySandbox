@@ -3,6 +3,7 @@
 
 #include "BaseGeometryActor.h"
 #include "Engine.h"
+#include "Materials/MaterialInstanceDynamic.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogBaseActor, All, All)
 
@@ -23,6 +24,7 @@ void ABaseGeometryActor::BeginPlay()
 	//PrintStringTypes();
 
 	InitialLocation = GetActorLocation();
+	SetColor();
 }
 
 // Called every frame
@@ -45,6 +47,13 @@ void ABaseGeometryActor::ProcessMovement()
 		case EMovementType::Static:
 		default:
 			break;
+	}
+}
+
+void ABaseGeometryActor::SetColor()
+{
+	if (auto material = Mesh->CreateAndSetMaterialInstanceDynamic(0)) {
+		material->SetVectorParameterValue("Color", GeometryData.Color);
 	}
 }
 
