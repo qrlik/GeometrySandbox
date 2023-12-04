@@ -8,11 +8,7 @@
 #include "BaseGeometryActor.generated.h"
 
 UENUM(BlueprintType)
-enum class EMovementType : uint8
-{
-	Sin = 0,
-	Static = 1
-};
+enum class EMovementType : uint8 { Sin = 0, Static = 1 };
 
 USTRUCT(BlueprintType)
 struct FGeometryData {
@@ -35,11 +31,10 @@ struct FGeometryData {
 };
 
 UCLASS()
-class GEOMETRYSANDBOX_API ABaseGeometryActor : public AActor
-{
+class GEOMETRYSANDBOX_API ABaseGeometryActor : public AActor {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	ABaseGeometryActor();
 
@@ -47,9 +42,11 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	void setGeometryData(const FGeometryData& Data) { GeometryData = Data; }
 
 private:
 	void PrintStringTypes() const;
@@ -85,5 +82,4 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	bool HasWeapon = false;
-
 };

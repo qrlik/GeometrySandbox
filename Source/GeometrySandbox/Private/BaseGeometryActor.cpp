@@ -19,7 +19,7 @@ ABaseGeometryActor::ABaseGeometryActor():
 void ABaseGeometryActor::BeginPlay() {
 	Super::BeginPlay();
 
-	//PrintStringTypes();
+	// PrintStringTypes();
 
 	InitialLocation = GetActorLocation();
 	SetColor(GeometryData.Color);
@@ -48,6 +48,9 @@ void ABaseGeometryActor::ProcessMovement() {
 }
 
 void ABaseGeometryActor::SetColor(const FLinearColor& Color) const {
+	if (!Mesh) {
+		return;
+	}
 	if (const auto Material = Mesh->CreateAndSetMaterialInstanceDynamic(0)) {
 		Material->SetVectorParameterValue("Color", Color);
 	}
@@ -71,6 +74,8 @@ void ABaseGeometryActor::PrintStringTypes() const {
 
 	const FString Stat = FString::Printf(TEXT(" \n == All Stats == \n %s \n %s \n %s"), *WeaponsNumStr, *HealthStr, *IsDeadStr);
 
-	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, Name);
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, Stat, true, FVector2D{ 1.5f, 1.5f });
+	if (GEngine) {
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, Name);
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, Stat, true, FVector2D{ 1.5f, 1.5f });
+	}
 }
