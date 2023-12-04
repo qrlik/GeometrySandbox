@@ -8,35 +8,32 @@
 DEFINE_LOG_CATEGORY_STATIC(LogBaseActor, All, All)
 
 // Sets default values
-ABaseGeometryActor::ABaseGeometryActor(): 
-	Mesh(CreateDefaultSubobject<UStaticMeshComponent>("BaseMesh")) 
-{
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+ABaseGeometryActor::ABaseGeometryActor():
+	Mesh(CreateDefaultSubobject<UStaticMeshComponent>("BaseMesh")) {
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	SetRootComponent(Mesh);
 }
 
 // Called when the game starts or when spawned
-void ABaseGeometryActor::BeginPlay()
-{
+void ABaseGeometryActor::BeginPlay() {
 	Super::BeginPlay();
 
 	//PrintStringTypes();
 
 	InitialLocation = GetActorLocation();
-	SetColor();
+	SetColor(GeometryData.Color);
+	GetWorldTimerManager().SetTimer(TimerHandle, this, &ABaseGeometryActor::OnTimerFired, GeometryData.TimerRate, true);
 }
 
 // Called every frame
-void ABaseGeometryActor::Tick(float DeltaTime)
-{
+void ABaseGeometryActor::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 
 	ProcessMovement();
 }
 
-void ABaseGeometryActor::ProcessMovement() 
-{
+void ABaseGeometryActor::ProcessMovement() {
 	switch (GeometryData.MovementType) {
 		case EMovementType::Sin: {
 			auto CurrentLocation = GetActorLocation();
@@ -50,15 +47,23 @@ void ABaseGeometryActor::ProcessMovement()
 	}
 }
 
-void ABaseGeometryActor::SetColor()
-{
-	if (auto material = Mesh->CreateAndSetMaterialInstanceDynamic(0)) {
-		material->SetVectorParameterValue("Color", GeometryData.Color);
+void ABaseGeometryActor::SetColor(const FLinearColor& Color) const {
+	if (const auto Material = Mesh->CreateAndSetMaterialInstanceDynamic(0)) {
+		Material->SetVectorParameterValue("Color", Color);
 	}
 }
 
-void ABaseGeometryActor::PrintStringTypes() const
-{
+void ABaseGeometryActor::OnTimerFired() {
+	if (TimerCount < MaxTimerCount) {
+		++TimerCount;
+		SetColor(FLinearColor::MakeRandomColor());
+	}
+	else if (TimerCount == MaxTimerCount) {
+		GetWorldTimerManager().ClearTimer(TimerHandle);
+	}
+}
+
+void ABaseGeometryActor::PrintStringTypes() const {
 	UE_LOG(LogBaseActor, Display, TEXT("Name: %s"), *Name);
 	const FString WeaponsNumStr = "Weapons num = " + FString::FromInt(WeaponsNum);
 	const FString HealthStr = "Health num = " + FString::SanitizeFloat(Health);
