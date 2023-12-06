@@ -29,18 +29,21 @@ public:
 	// Sets default values for this actor's properties
 	AGeometryHubActor();
 
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
 private:
 	void DoActorSpawn1() const;
 	void DoActorSpawn2() const;
-	void DoActorSpawn3() const;
+	void DoActorSpawn3();
+
+	UFUNCTION()
+	void OnColorChanged(const FLinearColor& Color, const FString& Name);
+	void OnTimerFinished(AActor* Actor) const;
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<ABaseGeometryActor> GeometryActor;

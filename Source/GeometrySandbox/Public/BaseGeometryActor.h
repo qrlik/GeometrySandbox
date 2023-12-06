@@ -7,6 +7,9 @@
 #include "Components/StaticMeshComponent.h"
 #include "BaseGeometryActor.generated.h"
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnTimerFinished, AActor*);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnColorChange, const FLinearColor&, Color, const FString&, Name);
+
 UENUM(BlueprintType)
 enum class EMovementType : uint8 { Sin = 0, Static = 1 };
 
@@ -14,16 +17,16 @@ USTRUCT(BlueprintType)
 struct FGeometryData {
 	GENERATED_USTRUCT_BODY()
 
-	UPROPERTY(EditInstanceOnly, Category = "Movement")
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Movement")
 	float Amplitude = 50.f;
 
-	UPROPERTY(EditInstanceOnly, Category = "Movement")
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Movement")
 	float Frequency = 2.f;
 
-	UPROPERTY(EditInstanceOnly, Category = "Movement")
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Movement")
 	EMovementType MovementType = EMovementType::Static;
 
-	UPROPERTY(EditInstanceOnly, Category = "Design")
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Design")
 	FLinearColor Color = FLinearColor::Black;
 
 	UPROPERTY(EditInstanceOnly, Category = "Design")
@@ -38,15 +41,23 @@ public:
 	// Sets default values for this actor's properties
 	ABaseGeometryActor();
 
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
+	UFUNCTION(BlueprintCallable)
+	void SetGeometryData(const FGeometryData& Data) { GeometryData = Data; }
+
+	UFUNCTION(BlueprintCallable)
+	const FGeometryData& GetGeometryData() const { return GeometryData; }
+
+	FOnTimerFinished OnTimerFinished;
+	UPROPERTY(BlueprintAssignable)
+	FOnColorChange OnColorChange;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	void setGeometryData(const FGeometryData& Data) { GeometryData = Data; }
 
 private:
 	void PrintStringTypes() const;
@@ -59,11 +70,11 @@ private:
 	int32 MaxTimerCount = 5;
 	int32 TimerCount = 0;
 
-	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* Mesh;
-
 	UPROPERTY(EditInstanceOnly, Category = "Geometry")
 	FGeometryData GeometryData;
+
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* Mesh;
 
 	UPROPERTY(EditAnywhere)
 	FString Name = "John Connor";

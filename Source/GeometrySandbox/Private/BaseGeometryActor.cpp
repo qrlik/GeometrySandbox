@@ -5,7 +5,7 @@
 #include "Engine.h"
 #include "Materials/MaterialInstanceDynamic.h"
 
-DEFINE_LOG_CATEGORY_STATIC(LogBaseActor, All, All)
+DEFINE_LOG_CATEGORY_STATIC(LogGeometryActor, All, All)
 
 // Sets default values
 ABaseGeometryActor::ABaseGeometryActor():
@@ -31,6 +31,11 @@ void ABaseGeometryActor::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 
 	ProcessMovement();
+}
+
+void ABaseGeometryActor::EndPlay(const EEndPlayReason::Type EndPlayReason) {
+	UE_LOG(LogGeometryActor, Warning, TEXT("Actor is dead %s"), *GetName())
+	Super::EndPlay(EndPlayReason);
 }
 
 void ABaseGeometryActor::ProcessMovement() {
@@ -59,15 +64,18 @@ void ABaseGeometryActor::SetColor(const FLinearColor& Color) const {
 void ABaseGeometryActor::OnTimerFired() {
 	if (TimerCount < MaxTimerCount) {
 		++TimerCount;
-		SetColor(FLinearColor::MakeRandomColor());
+		const auto NewColor = FLinearColor::MakeRandomColor();
+		SetColor(NewColor);
+		OnColorChange.Broadcast(NewColor, GetName());
 	}
 	else if (TimerCount == MaxTimerCount) {
 		GetWorldTimerManager().ClearTimer(TimerHandle);
+		OnTimerFinished.Broadcast(this);
 	}
 }
 
 void ABaseGeometryActor::PrintStringTypes() const {
-	UE_LOG(LogBaseActor, Display, TEXT("Name: %s"), *Name);
+	UE_LOG(LogGeometryActor, Display, TEXT("Name: %s"), *Name);
 	const FString WeaponsNumStr = "Weapons num = " + FString::FromInt(WeaponsNum);
 	const FString HealthStr = "Health num = " + FString::SanitizeFloat(Health);
 	const FString IsDeadStr = "isDead = " + FString((IsDead) ? "True" : "False");
