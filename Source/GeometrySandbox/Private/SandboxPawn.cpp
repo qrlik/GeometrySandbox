@@ -2,6 +2,7 @@
 
 
 #include "SandboxPawn.h"
+#include "Camera/CameraComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogSandboxPawn, All, All)
 
@@ -12,6 +13,12 @@ ASandboxPawn::ASandboxPawn() {
 
 	SceneComponent = CreateDefaultSubobject<USceneComponent>("SceneComponent");
 	SetRootComponent(SceneComponent);
+
+	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("StaticMeshComponent");
+	StaticMeshComponent->SetupAttachment(SceneComponent);
+
+	CameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
+	CameraComponent->SetupAttachment(SceneComponent);
 }
 
 // Called when the game starts or when spawned
@@ -39,12 +46,24 @@ void ASandboxPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	}
 }
 
+void ASandboxPawn::PossessedBy(AController* NewController) {
+	Super::PossessedBy(NewController);
+	if (NewController) {
+		UE_LOG(LogSandboxPawn, Warning, TEXT("%s - PossessedBy %s"), *GetName(), *NewController->GetName());
+	}
+}
+
+void ASandboxPawn::UnPossessed() {
+	Super::UnPossessed();
+	UE_LOG(LogSandboxPawn, Warning, TEXT("%s - UnPossessed"), *GetName());
+}
+
 void ASandboxPawn::MoveForward(float Amount) {
-	UE_LOG(LogSandboxPawn, Display, TEXT("MoveForward - %f"), Amount);
+	//UE_LOG(LogSandboxPawn, Display, TEXT("MoveForward - %f"), Amount);
 	VelocityVector.X = Amount;
 }
 
 void ASandboxPawn::MoveSide(float Amount) {
-	UE_LOG(LogSandboxPawn, Display, TEXT("MoveSide - %f"), Amount);
+	//UE_LOG(LogSandboxPawn, Display, TEXT("MoveSide - %f"), Amount);
 	VelocityVector.Y = Amount;
 }
