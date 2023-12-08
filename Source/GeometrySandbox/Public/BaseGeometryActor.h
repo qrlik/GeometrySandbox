@@ -11,7 +11,10 @@ DECLARE_MULTICAST_DELEGATE_OneParam(FOnTimerFinished, AActor*);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnColorChange, const FLinearColor&, Color, const FString&, Name);
 
 UENUM(BlueprintType)
-enum class EMovementType : uint8 { Sin = 0, Static = 1 };
+enum class EMovementType : uint8 {
+	Sin = 0,
+	Static = 1
+};
 
 USTRUCT(BlueprintType)
 struct FGeometryData {
