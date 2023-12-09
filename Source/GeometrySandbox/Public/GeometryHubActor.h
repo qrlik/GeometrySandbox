@@ -40,6 +40,7 @@ private:
 	void DoActorSpawn1() const;
 	void DoActorSpawn2() const;
 	void DoActorSpawn3();
+	void DoActorSpawn4();
 
 	UFUNCTION()
 	void OnColorChanged(const FLinearColor& Color, const FString& Name);
@@ -50,4 +51,11 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	TArray<FGeometryPayload> Payloads;
+
+	UPROPERTY()
+	ABaseGeometryActor* PropertyActor;
+
+	ABaseGeometryActor* NonePropertyActor;
+
+	TWeakObjectPtr<ABaseGeometryActor> WeakActor;
 };
