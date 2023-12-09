@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Components/StaticMeshComponent.h"
 #include "BaseGeometryActor.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnTimerFinished, AActor*);

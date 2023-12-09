@@ -2,7 +2,6 @@
 
 
 #include "GeometryHubActor.h"
-#include "Engine/World.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogGeometryHub, All, All)
 

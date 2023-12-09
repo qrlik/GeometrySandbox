@@ -2,8 +2,6 @@
 
 
 #include "BaseGeometryActor.h"
-#include "Engine.h"
-#include "Materials/MaterialInstanceDynamic.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogGeometryActor, All, All)
 
